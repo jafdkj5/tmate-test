@@ -1,0 +1,19 @@
+name: Debug with upterm
+
+on:
+  workflow_dispatch:
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1440        # Set to 24h, but GitHub-hosted will still cut at 360m
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup upterm session
+        uses: owenthereal/action-upterm@v1
+        with:
+          limit-access-to-actor: true
+          detached: true
+          wait-timeout-minutes: 1435   # Just under the job timeout
