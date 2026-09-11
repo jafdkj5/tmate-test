@@ -1,16 +1,13 @@
-name: Debug with tmate
+name: Debug with upterm
 on:
   workflow_dispatch:
-  push:
-    branches: [ main, master ]
 
 jobs:
   debug:
     runs-on: ubuntu-latest
-    timeout-minutes: 30        # 👈 correct place
     steps:
       - uses: actions/checkout@v4
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+      - name: Setup upterm session
+        uses: owenthereal/action-upterm@v1
         with:
           limit-access-to-actor: true
