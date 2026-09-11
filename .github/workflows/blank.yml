@@ -1,13 +1,16 @@
 name: Debug with tmate
-on: [push]  # Runs whenever you push code
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
 
 jobs:
   debug:
     runs-on: ubuntu-latest
+    timeout-minutes: 30        # 👈 correct place
     steps:
       - uses: actions/checkout@v4
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
         with:
-          limit-access-to-actor: true  # ONLY you can connect
-          timeout-minutes: 15          # Auto-kill after 15 mins
+          limit-access-to-actor: true
