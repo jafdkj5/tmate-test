@@ -20,6 +20,9 @@ jobs:
           STATE_BRANCH: ${{ vars.STATE_BRANCH }}
           SCRIPT_REPO:  ${{ vars.SCRIPT_REPO }}
           SCRIPT_REF:   ${{ vars.SCRIPT_REF }}
+          WEBDAV_URL:   ${{ secrets.WEBDAV_URL }}
+          WEBDAV_USER:  ${{ secrets.WEBDAV_USER }}
+          WEBDAV_PASS:  ${{ secrets.WEBDAV_PASS }}
         run: |
           set -euxo pipefail
 
@@ -35,4 +38,7 @@ jobs:
             GH_TOKEN="${GH_TOKEN}" \
             STATE_REPO="${STATE_REPO}" \
             STATE_BRANCH="${STATE_BRANCH}" \
+            WEBDAV_URL="${WEBDAV_URL}" \
+            WEBDAV_USER="${WEBDAV_USER}" \
+            WEBDAV_PASS="${WEBDAV_PASS}" \
             /tmp/main.sh
