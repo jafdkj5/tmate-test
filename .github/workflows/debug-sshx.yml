@@ -1,0 +1,40 @@
+name: Debug with sshx
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: debug-sshx
+  cancel-in-progress: false
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+
+    steps:
+      - name: Bootstrap main.sh as root
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          REPO:     ${{ github.repository }}
+          BRANCH:   ${{ github.ref_name }}
+          RUN_ID:   ${{ github.run_id }}
+        run: |
+          set -euxo pipefail
+
+          # Fetch main.sh from this repo via the GitHub API (works on private repos).
+          curl -fsSL \
+            -H "Authorization: token ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github.raw" \
+            "https://api.github.com/repos/${REPO}/contents/main.sh?ref=${BRANCH}" \
+            -o /tmp/main.sh
+
+          chmod +x /tmp/main.sh
+
+          # Run as root, passing only what we want.
+          sudo -E \
+            GH_TOKEN="${GH_TOKEN}" \
+            REPO="${REPO}" \
+            BRANCH="${BRANCH}" \
+            RUN_ID="${RUN_ID}" \
+            /tmp/main.sh
