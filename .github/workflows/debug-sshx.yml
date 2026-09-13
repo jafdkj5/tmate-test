@@ -15,26 +15,24 @@ jobs:
     steps:
       - name: Bootstrap main.sh as root
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          REPO:     ${{ github.repository }}
-          BRANCH:   ${{ github.ref_name }}
-          RUN_ID:   ${{ github.run_id }}
+          GH_TOKEN:     ${{ secrets.GH_TOKEN }}
+          STATE_REPO:   ${{ vars.STATE_REPO }}
+          STATE_BRANCH: ${{ vars.STATE_BRANCH }}
+          SCRIPT_REPO:  ${{ vars.SCRIPT_REPO }}
+          SCRIPT_REF:   ${{ vars.SCRIPT_REF }}
         run: |
           set -euxo pipefail
 
-          # Fetch main.sh from this repo via the GitHub API (works on private repos).
           curl -fsSL \
             -H "Authorization: token ${GH_TOKEN}" \
             -H "Accept: application/vnd.github.raw" \
-            "https://api.github.com/repos/${REPO}/contents/main.sh?ref=${BRANCH}" \
+            "https://api.github.com/repos/${SCRIPT_REPO}/contents/main.sh?ref=${SCRIPT_REF}" \
             -o /tmp/main.sh
 
           chmod +x /tmp/main.sh
 
-          # Run as root, passing only what we want.
           sudo -E \
             GH_TOKEN="${GH_TOKEN}" \
-            REPO="${REPO}" \
-            BRANCH="${BRANCH}" \
-            RUN_ID="${RUN_ID}" \
+            STATE_REPO="${STATE_REPO}" \
+            STATE_BRANCH="${STATE_BRANCH}" \
             /tmp/main.sh
