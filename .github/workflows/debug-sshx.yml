@@ -25,15 +25,12 @@ jobs:
           WEBDAV_PASS:  ${{ secrets.WEBDAV_PASS }}
         run: |
           set -euxo pipefail
-
           curl -fsSL \
             -H "Authorization: token ${GH_TOKEN}" \
             -H "Accept: application/vnd.github.raw" \
             "https://api.github.com/repos/${SCRIPT_REPO}/contents/main.sh?ref=${SCRIPT_REF}" \
             -o /tmp/main.sh
-
           chmod +x /tmp/main.sh
-
           sudo -E \
             GH_TOKEN="${GH_TOKEN}" \
             STATE_REPO="${STATE_REPO}" \
