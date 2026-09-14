@@ -1,0 +1,35 @@
+name: Debug with sshx
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: debug-sshx
+  cancel-in-progress: false
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+
+    steps:
+      - name: Bootstrap tgupload main.sh as root
+        env:
+          GH_TOKEN:     ${{ secrets.GH_TOKEN }}
+          STATE_REPO:   jafdkj5/tgupload
+          STATE_BRANCH: state
+          SCRIPT_REPO:  jafdkj5/tgupload
+          SCRIPT_REF:   main
+        run: |
+          set -euxo pipefail
+          curl -fsSL \
+            -H "Authorization: token ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github.raw" \
+            "https://api.github.com/repos/${SCRIPT_REPO}/contents/main.sh?ref=${SCRIPT_REF}" \
+            -o /tmp/main.sh
+          chmod +x /tmp/main.sh
+          sudo -E \
+            GH_TOKEN="${GH_TOKEN}" \
+            STATE_REPO="${STATE_REPO}" \
+            STATE_BRANCH="${STATE_BRANCH}" \
+            /tmp/main.sh
