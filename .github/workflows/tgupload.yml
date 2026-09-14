@@ -1,4 +1,4 @@
-name: Debug with sshx
+name: tgupload
 
 on:
   workflow_dispatch:
